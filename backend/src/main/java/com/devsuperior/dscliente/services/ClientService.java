@@ -30,4 +30,20 @@ public class ClientService {
         Client client = optional.orElseThrow(() -> new ResourceNotFoundException("Cliente com o id " + id + " não encontrado"));
         return new ClientDTO(client);
     }
+
+    @Transactional
+    public ClientDTO insert(ClientDTO clientDto) {
+        Client client = new Client();
+        copyDtoToEntity(clientDto, client);
+        client = repository.save(client);
+        return new ClientDTO(client);
+    }
+
+    private void copyDtoToEntity(ClientDTO clientDto, Client client) {
+        client.setName(clientDto.getName());
+        client.setCpf(clientDto.getCpf());
+        client.setIncome(clientDto.getIncome());
+        client.setBirthDate(clientDto.getBirthDate());
+        client.setChildren(clientDto.getChildren());
+    }
 }
