@@ -5,11 +5,13 @@ import com.devsuperior.dscliente.entities.Client;
 import com.devsuperior.dscliente.repositories.ClientRepository;
 import com.devsuperior.dscliente.services.expetions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
@@ -37,6 +39,19 @@ public class ClientService {
         copyDtoToEntity(clientDto, client);
         client = repository.save(client);
         return new ClientDTO(client);
+    }
+
+    @Transactional
+    public ClientDTO update(Long id, ClientDTO clientDto) {
+        try {
+            Client client = repository.getOne(id);
+            copyDtoToEntity(clientDto, client);
+            client = repository.save(client);
+            return new ClientDTO(client);
+        }
+        catch (EntityNotFoundException exception) {
+            throw new ResourceNotFoundException("Cliente com o id " + id + " não encontrado");
+        }
     }
 
     private void copyDtoToEntity(ClientDTO clientDto, Client client) {

@@ -31,7 +31,7 @@ public class ClientResource {
         return ResponseEntity.ok(clientsDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<ClientDTO> findById(@PathVariable Long id) {
         ClientDTO clientDto = service.findById(id);
         return ResponseEntity.ok(clientDto);
@@ -45,5 +45,11 @@ public class ClientResource {
                 .buildAndExpand(clientDto.getId())
                 .toUri();
         return ResponseEntity.created(uri).body(clientDto);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ClientDTO> update(@PathVariable Long id, @RequestBody ClientDTO clientDto) {
+        clientDto = service.update(id, clientDto);
+        return ResponseEntity.ok(clientDto);
     }
 }
