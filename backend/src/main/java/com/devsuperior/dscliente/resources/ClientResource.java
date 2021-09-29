@@ -52,4 +52,10 @@ public class ClientResource {
         clientDto = service.update(id, clientDto);
         return ResponseEntity.ok(clientDto);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<ClientDTO> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

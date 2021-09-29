@@ -3,8 +3,10 @@ package com.devsuperior.dscliente.services;
 import com.devsuperior.dscliente.dto.ClientDTO;
 import com.devsuperior.dscliente.entities.Client;
 import com.devsuperior.dscliente.repositories.ClientRepository;
-import com.devsuperior.dscliente.services.expetions.ResourceNotFoundException;
+import com.devsuperior.dscliente.services.exceptions.DatabaseException;
+import com.devsuperior.dscliente.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,6 +53,18 @@ public class ClientService {
         }
         catch (EntityNotFoundException exception) {
             throw new ResourceNotFoundException("Cliente com o id " + id + " não encontrado");
+        }
+    }
+
+    public void delete(Long id) {
+        try {
+            repository.deleteById(id);
+        }
+        catch (EmptyResultDataAccessException exception) {
+            throw new ResourceNotFoundException("Cliente com o id " + id + " não encontrado");
+        }
+        catch (DataIntegrityViolationException exception) {
+            throw new DatabaseException("Integridade dos dados violada");
         }
     }
 
